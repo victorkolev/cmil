@@ -1,0 +1,96 @@
+defaults:
+
+  # Train Script
+  logdir: .
+  expertdir: .
+  seed: 0
+  envs: 1
+  render_size: [64, 64]
+  action_repeat: 1
+  steps: 2e5
+  log_every: 1e3
+  eval_every: 1e5
+  eval_eps: 1
+  pretrain: 1000
+  train_every: 5
+  train_steps: 2
+  replay: {capacity: 2e6, ongoing: False, minlen: 50, maxlen: 50, prioritize_ends: False}
+  dataset: {batch: 32, length: 50}
+  log_keys_video: ['image']
+  log_keys_sum: '^$'
+  log_keys_mean: '^$'
+  log_keys_max: '^$'
+  precision: 32
+  jit: True
+
+  # Agent
+  expl_noise: 0.0
+  eval_noise: 0.0
+  eval_state_mean: False
+  pretrain_bc: 100
+  seed_steps: 5000
+
+  # World Model
+  grad_heads: [decoder]
+  pred_discount: False
+  rssm: {ensemble: 10, hidden: 400, deter: 400, stoch: 360, discrete: False, act: elu, norm: none, std_act: sigmoid2, min_std: 0.1}
+  encoder: {mlp_keys: '$^', cnn_keys: 'image', act: elu, norm: none, cnn_depth: 48, cnn_kernels: [4, 4, 4, 4], mlp_layers: [400, 400, 400, 400]}
+  decoder: {mlp_keys: '$^', cnn_keys: 'image', act: elu, norm: none, cnn_depth: 48, cnn_kernels: [5, 5, 6, 6], mlp_layers: [400, 400, 400, 400]}
+  discount_head: {layers: 4, units: 400, act: elu, norm: none, dist: binary}
+  loss_scales: {kl: 1.0, reward: 1.0, discount: 1.0}
+  kl: {free: 1.0, forward: False, balance: 0.8, free_avg: True}
+  model_opt: {opt: adam, lr: 3e-4, eps: 1e-5, clip: 100, wd: 1e-6}
+
+  # Actor Critic
+  actor: {layers: 4, units: 400, act: elu, norm: none, dist: auto, min_std: 0.1}
+  critic: {layers: 4, units: 400, act: elu, norm: none, dist: mse}
+  actor_opt: {opt: adam, lr: 3e-4, eps: 1e-5, clip: 100, wd: 1e-6}
+  critic_opt: {opt: adam, lr: 3e-4, eps: 1e-5, clip: 100, wd: 1e-6}
+  num_critics: 2
+  discount: 0.99
+  discount_lambda: 0.95
+  imag_horizon: 15
+  actor_grad: auto
+  actor_grad_mix: 0.1
+  unc_penalty: -10.0
+  bc_scale: 10.0
+  actor_ent: 1e-4
+  slow_target: True
+  slow_target_update: 100
+  slow_target_fraction: 1
+
+  # discriminator
+  discriminator: {layers: 2, units: 200, act: elu, norm: none, dist: binary}
+  discriminator_opt: {opt: adam, lr: 3e-5, eps: 1e-5, clip: 100, wd: 1e-6}
+  wgan: False
+  wgan_opt: {opt: rmsprop, lr: 8e-5, eps: 1e-5, clip: 100, wd: 1e-5}
+  wgan_clip: 0.01
+  discriminator_noise: 2.5
+
+
+kitchen:
+
+  task: kitchen_mixed
+  eval_every: 560
+  time_limit: 280
+
+
+shadowhand:
+
+  task: shadowhand_baoding
+  eval_every: 300
+  replay: {capacity: 2e6, ongoing: False, minlen: 25, maxlen: 25, prioritize_ends: False}
+  dataset: {batch: 32, length: 25}
+  time_limit: 75
+
+
+debug:
+
+  jit: False
+  time_limit: 100
+  eval_every: 300
+  log_every: 300
+  pretrain: 1
+  train_steps: 1
+  replay: {minlen: 10, maxlen: 30}
+  dataset: {batch: 10, length: 10}
