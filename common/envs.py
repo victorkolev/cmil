@@ -1,4 +1,5 @@
 import atexit
+import pathlib
 import os
 import sys
 import threading
@@ -157,8 +158,9 @@ class Kitchen:
 
 class BaodingEnv:
     def __init__(self, size=(128, 128)):
-        import pddm
-        from pddm.envs.baoding.baoding_env import BaodingEnv
+        sys.path.append(str(pathlib.Path(__file__).parent))
+
+        from .pddm.envs.baoding.baoding_env import BaodingEnv
 
         self._env = BaodingEnv()
         self.size = size

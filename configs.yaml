@@ -1,8 +1,9 @@
 defaults:
 
   # Train Script
-  logdir: .
+  logdir: logs
   expertdir: .
+  task: none
   seed: 0
   envs: 1
   render_size: [64, 64]
@@ -22,6 +23,7 @@ defaults:
   log_keys_max: '^$'
   precision: 32
   jit: True
+  time_limit: 300
 
   # Agent
   expl_noise: 0.0
@@ -71,6 +73,7 @@ defaults:
 kitchen:
 
   task: kitchen_mixed
+  expertdir: data/kitchen
   eval_every: 560
   time_limit: 280
 
@@ -78,6 +81,7 @@ kitchen:
 shadowhand:
 
   task: shadowhand_baoding
+  expertdir: data/shadowhand
   eval_every: 300
   replay: {capacity: 2e6, ongoing: False, minlen: 25, maxlen: 25, prioritize_ends: False}
   dataset: {batch: 32, length: 25}

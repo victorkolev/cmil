@@ -63,7 +63,7 @@ def main():
 
         prec.set_policy(prec.Policy("mixed_float16"))
     train_replay = common.Replay(logdir / "train_episodes", **config.replay)
-    expert_replay = common.Replay(expertdir, read_fn=read_fn, **config.replay)
+    expert_replay = common.Replay(expertdir, **config.replay)
     eval_replay = common.Replay(
         logdir / "eval_episodes",
         **dict(

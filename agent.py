@@ -156,6 +156,18 @@ class WorldModel(common.Module):
 
     def imagine_from_expert(self, expert, horizon):
         metrics = {}
+
+        expert["ensemble_mean"] = tf.repeat(
+            tf.expand_dims(expert["mean"], -2),
+            repeats=self.rssm._ensemble,
+            axis=-2,
+        )
+        expert["ensemble_std"] = tf.repeat(
+            tf.expand_dims(expert["std"], -2),
+            repeats=self.rssm._ensemble,
+            axis=-2,
+        )
+
         seq = {k: [v[:, :-horizon-1]] for k, v in expert.items()}
         for t in range(horizon):
             action = expert['action'][:, 1+t:-(horizon-t)]
